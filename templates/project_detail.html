@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title">{{ project.title }}</h1>
+        <h2 class="subtitle">
+            <span class="tag is-info">{{ project.get_status_display }}</span>
+            <span class="icon-text ml-3">
+                <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                <span>{{ project.location }}</span>
+            </span>
+        </h2>
+
+        <div class="content">
+            <p>{{ project.description }}</p>
+            <p><strong>Created by:</strong> {{ project.created_by.username }} on {{ project.created_at|date }}</p>
+        </div>
+
+        <hr>
+
+        <h3 class="title is-4">Project Requirements</h3>
+        <div class="columns is-multiline">
+            {% for req in project.requirements.all %}
+            <div class="column is-half">
+                <div class="box">
+                    <h4 class="title is-5">{{ req.name }}</h4>
+                    <p>{{ req.description }}</p>
+                    {% if user.is_contractor %}
+                    <div class="mt-4">
+                        <a href="{% url 'place_bid' req.id %}" class="button is-primary is-small">Place Bid</a>
+                    </div>
+                    {% endif %}
+
+                    {% if user == project.created_by or user == project.assigned_company %}
+                    {% if req.bids.exists %}
+                    <div class="mt-4">
+                        <h6 class="title is-6">Bids</h6>
+                        <table class="table is-fullwidth is-narrow">
+                            <thead>
+                                <tr>
+                                    <th>Contractor</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for bid in req.bids.all %}
+                                <tr>
+                                    <td>{{ bid.contractor.username }}</td>
+                                    <td>${{ bid.amount }}</td>
+                                    <td>
+                                        {% if bid.status == 'pending' %}
+                                        <span class="tag is-warning">Pending</span>
+                                        {% elif bid.status == 'accepted' %}
+                                        <span class="tag is-success">Accepted</span>
+                                        {% else %}
+                                        <span class="tag is-danger">Rejected</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if bid.status == 'pending' %}
+                                        <div class="buttons are-small">
+                                            <a href="{% url 'manage_bid' bid.id 'accept' %}"
+                                                class="button is-success is-light">Accept</a>
+                                            <a href="{% url 'manage_bid' bid.id 'reject' %}"
+                                                class="button is-danger is-light">Reject</a>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="is-size-7 has-text-grey">{{ bid.message }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="is-size-7 has-text-grey mt-2">No bids yet.</p>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="column">
+                <p>No specific requirements listed.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-6">
+            <a href="{% url 'home' %}" class="button is-light">Back to Projects</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

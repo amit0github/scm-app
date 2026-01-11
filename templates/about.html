@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered mb-6">How It Works</h1>
+
+        <div class="content is-medium">
+            <p class="has-text-centered mb-6">
+                Our Supply Chain Management platform streamlines the process of procurement and fulfillment by
+                connecting Councils with vetted Contractors and Companies.
+            </p>
+
+            <div class="columns featured-steps">
+                <div class="column is-4">
+                    <article class="message is-primary">
+                        <div class="message-header">
+                            <p>1. Project Creation</p>
+                        </div>
+                        <div class="message-body">
+                            <strong>Councils</strong> identify needs for public works or services and create a new
+                            Project on the platform. They define specific Requirements (e.g., Materials, Labor,
+                            Logistics) needed for the project's completion.
+                        </div>
+                    </article>
+                </div>
+                <div class="column is-4">
+                    <article class="message is-info">
+                        <div class="message-header">
+                            <p>2. Bidding Process</p>
+                        </div>
+                        <div class="message-body">
+                            <strong>Contractors</strong> browse available Project Requirements suitable for their
+                            expertise. They submit competitive Bids detailing their cost and timeline.
+                            <strong>Companies</strong> can also manage large-scale projects and assign resources.
+                        </div>
+                    </article>
+                </div>
+                <div class="column is-4">
+                    <article class="message is-success">
+                        <div class="message-header">
+                            <p>3. Selection & Execution</p>
+                        </div>
+                        <div class="message-body">
+                            Councils review all bids and award contracts to the best candidates. Once selected,
+                            Contractors begin work, and progress is tracked through the platform until the Project is
+                            marked as 'Completed'.
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <hr>
+
+            <h2 class="title is-4 has-text-centered">Ready to get started?</h2>
+            <div class="buttons is-centered">
+                <a href="{% url 'register' %}" class="button is-primary is-medium">
+                    <strong>Create an Account</strong>
+                </a>
+                <a href="{% url 'project_list' %}" class="button is-light is-medium">
+                    Browse Projects
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

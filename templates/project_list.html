@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <h1 class="title has-text-centered mb-6">Browse Projects</h1>
+
+        <div class="columns is-multiline">
+            {% for project in projects %}
+            <div class="column is-one-third">
+                <div class="card">
+                    <header class="card-header">
+                        <p class="card-header-title">
+                            {{ project.title }}
+                        </p>
+                        <span class="tag is-info m-2">{{ project.get_status_display }}</span>
+                    </header>
+                    <div class="card-content">
+                        <div class="content">
+                            {{ project.description|truncatewords:20 }}
+                            <br>
+                            <time datetime="{{ project.created_at }}">{{ project.created_at|date }}</time>
+                        </div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="{% url 'project_detail' project.id %}" class="card-footer-item">View Details</a>
+                    </footer>
+                </div>
+            </div>
+            {% empty %}
+            <div class="column">
+                <div class="notification is-info">
+                    No projects available at the moment.
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if projects.has_other_pages %}
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+            {% if projects.has_previous %}
+            <a class="pagination-previous" href="?page={{ projects.previous_page_number }}">Previous</a>
+            {% else %}
+            <a class="pagination-previous" disabled>Previous</a>
+            {% endif %}
+
+            {% if projects.has_next %}
+            <a class="pagination-next" href="?page={{ projects.next_page_number }}">Next</a>
+            {% else %}
+            <a class="pagination-next" disabled>Next</a>
+            {% endif %}
+
+            <ul class="pagination-list">
+                {% for i in projects.paginator.page_range %}
+                {% if projects.number == i %}
+                <li><a class="pagination-link is-current" aria-label="Page {{ i }}" aria-current="page">{{ i }}</a></li>
+                {% else %}
+                <li><a class="pagination-link" href="?page={{ i }}" aria-label="Goto page {{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
